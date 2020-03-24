@@ -1,0 +1,72 @@
+#include <ESP8266WiFi.h>
+
+const char* ssid     = "xxxx";
+const char* password = "xxxx";
+
+void setup() {
+
+  pinMode(0, OUTPUT);  //GPIO 0
+  digitalWrite(0, HIGH);
+
+ // pinMode(1, OUTPUT);     // Initialize the BUILTIN_LED pin as an output
+ // digitalWrite(1, HIGH);
+
+  // You CAN control the blue LED if you do not need the TX function. TX is actually GPIO1 so by setting GPIO1 to HIGH it will light up. Ofcourse sending output to serial will spoil things.
+  pinMode(LED_BUILTIN, OUTPUT); 
+  //digitalWrite(LED_BUILTIN, HIGH);
+  
+  Serial.begin(115200);   //74880 default 
+  
+  Serial.print("LED_BUILTIN = ");
+  Serial.println(LED_BUILTIN, DEC);
+
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+
+  WiFi.mode(WIFI_STA); //We don't want the ESP to act as an AP
+  WiFi.begin(ssid, password);
+
+  int i = 0;
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+
+    if(i++ > 100){
+      break;
+    }
+  }
+
+  if(WiFi.status() == WL_CONNECTED){
+    Serial.println("");
+    Serial.println("WiFi connected.");  
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+
+    digitalWrite(LED_BUILTIN, HIGH);
+  }
+  else{
+    Serial.println("WiFi failed to connect."); 
+  }
+  
+}
+
+// the loop function runs over and over again forever
+void loop() {
+  /*digitalWrite(2, HIGH);   // Turn the LED on (Note that LOW is the voltage level
+                                    // but actually the LED is on; this is because 
+                                    // it is acive low on the ESP-01)
+  delay(500);                      // Wait for a second
+  digitalWrite(2, LOW);  // Turn the LED off by making the voltage HIGH
+  delay(500);
+  digitalWrite(2, HIGH);
+  delay(1000);                      // Wait for a second
+  digitalWrite(2, LOW);  // Turn the LED off by making the voltage HIGH
+  delay(500);
+  digitalWrite(2, HIGH);*/
+
+  if(WiFi.status() == WL_CONNECTED){
+    Serial.print("-");
+  }
+
+  delay(10);                      
+}
